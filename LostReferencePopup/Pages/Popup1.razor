@@ -1,0 +1,36 @@
+﻿@inject PageState State
+
+<Modal @ref="modalRef">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Employee edit</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Button Color="Color.Primary" Clicked="ChangeValue">Change value</Button>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    // reference to the modal component
+    private Modal modalRef;
+
+    public Task ShowModal()
+    {
+        return modalRef.Show();
+    }
+
+    public Task HideModal()
+    {
+        return modalRef.Hide();
+    }
+
+    private void ChangeValue()
+    {
+        State.ActionNumber?.Invoke(new PopupBase.RefClass { Value = 50 });
+    }
+}

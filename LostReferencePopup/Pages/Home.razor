@@ -1,0 +1,22 @@
+﻿@page "/"
+@inject PageState PageState
+
+<PageTitle>Home</PageTitle>
+
+<Button Color="Color.Primary" Clicked="EmbeddedClick">open service popup</Button>
+
+@code {
+    [Inject] public IModalService ModalService { get; set; } = default!;
+
+    private async Task EmbeddedClick()
+    {
+        await ModalService.Show<PopupBase>(null, x => { x.Add(x => x.Ref, new PopupBase.RefClass { Value = 100 }); }, Options(ModalSize.ExtraLarge));
+    }
+
+    private static ModalInstanceOptions Options(ModalSize size) => new()
+        {
+            UseModalStructure = false,
+            Centered = true,
+            Size = size
+        };
+}

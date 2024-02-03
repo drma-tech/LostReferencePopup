@@ -1,0 +1,59 @@
+﻿@inject PageState PageState
+
+<ModalHeader>
+    <ModalTitle>Employee edit</ModalTitle>
+    <CloseButton />
+</ModalHeader>
+<ModalBody>
+    <Paragraph>
+        Value:  @Ref?.Value
+    </Paragraph>
+
+    <Button Color="Color.Primary" Clicked="EmbeddedClick">open embedded popup</Button>
+    <Button Color="Color.Primary" Clicked="ServiceClick">open service popup</Button>
+
+    <Popup1 @ref="popup1"></Popup1>
+</ModalBody>
+<ModalFooter>
+    <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+</ModalFooter>
+
+
+@code {
+    [Inject] public IModalService ModalService { get; set; } = default!;
+    // reference to the modal component
+    private Popup1? popup1;
+
+    [Parameter] public RefClass? Ref { get; set; }
+    public class RefClass
+    {
+        public int Value { get; set; } = 100;
+    }
+
+    protected override void OnInitialized()
+    {
+        PageState.ActionNumber += (RefClass value) => { Ref = value; StateHasChanged(); };
+    }
+
+    private void EmbeddedClick()
+    {
+        popup1?.ShowModal();
+    }
+
+    private async Task ServiceClick()
+    {
+        await ModalService.Show<Popup2>(null, x => { }, Options(ModalSize.Default));
+    }
+
+    public Task HideModal()
+    {
+        return ModalService.Hide();
+    }
+
+    private static ModalInstanceOptions Options(ModalSize size) => new()
+        {
+            UseModalStructure = false,
+            Centered = true,
+            Size = size
+        };
+}

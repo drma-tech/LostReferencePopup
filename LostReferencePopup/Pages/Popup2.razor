@@ -1,0 +1,29 @@
+﻿@inject PageState State
+
+
+<ModalHeader>
+    <ModalTitle>Employee edit</ModalTitle>
+    <CloseButton />
+</ModalHeader>
+<ModalBody>
+    <Button Color="Color.Primary" Clicked="ChangeValue">Change value</Button>
+</ModalBody>
+<ModalFooter>
+    <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+</ModalFooter>
+
+
+@code {
+    [Inject] public IModalService ModalService { get; set; } = default!;
+
+
+    public Task HideModal()
+    {
+        return ModalService.Hide();
+    }
+
+    private void ChangeValue()
+    {
+        State.ActionNumber?.Invoke(new PopupBase.RefClass { Value = 50 });
+    }
+}
