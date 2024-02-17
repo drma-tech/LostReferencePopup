@@ -42,7 +42,7 @@
 
     private async Task ServiceClick()
     {
-        await ModalService.Show<Popup2>(null, x => { }, Options(ModalSize.Default));
+        await ModalService.Show<Popup2>(null, x => { }, Options(ModalSize.Default, "Popup2"));
     }
 
     public Task HideModal()
@@ -50,10 +50,13 @@
         return ModalService.Hide();
     }
 
-    private static ModalInstanceOptions Options(ModalSize size) => new()
+    private static ModalInstanceOptions Options(ModalSize size, string id) => new()
         {
             UseModalStructure = false,
             Centered = true,
-            Size = size
+            Size = size,
+            Stateful = true,
+            ElementId = id,
+            RenderMode = ModalRenderMode.LazyLoad
         };
 }
