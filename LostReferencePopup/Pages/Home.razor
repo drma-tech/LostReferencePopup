@@ -10,7 +10,13 @@
 
     private async Task EmbeddedClick()
     {
-        await ModalService.Show<PopupBase>(null, x => { x.Add(x => x.Ref, new PopupBase.RefClass { Value = 100 }); }, Options(ModalSize.ExtraLarge));
+        var refClass = new PopupBase.RefClass();
+
+        await ModalService.Show<PopupBase>(null, x =>
+        {
+            x.Add(x => x.Ref, refClass);
+            x.Add(x => x.RefChanged, EventCallback.Factory.Create(this, (PopupBase.RefClass? value) => refClass = value));
+        }, Options(ModalSize.Large));
     }
 
     private static ModalInstanceOptions Options(ModalSize size) => new()

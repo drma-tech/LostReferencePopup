@@ -25,6 +25,8 @@
     private Popup1? popup1;
 
     [Parameter] public RefClass? Ref { get; set; }
+    [Parameter] public EventCallback<RefClass?> RefChanged { get; set; }
+
     public class RefClass
     {
         public int Value { get; set; } = 100;
@@ -32,7 +34,7 @@
 
     protected override void OnInitialized()
     {
-        PageState.ActionNumber += (RefClass value) => { Ref = value; StateHasChanged(); };
+        PageState.ActionNumber += (RefClass value) => { Ref = value; RefChanged.InvokeAsync(value); StateHasChanged(); };
     }
 
     private void EmbeddedClick()
@@ -42,7 +44,7 @@
 
     private async Task ServiceClick()
     {
-        await ModalService.Show<Popup2>(null, x => { }, Options(ModalSize.Default, "Popup2"));
+        await ModalService.Show<Popup2>(null, x => { }, Options(ModalSize.Default));
     }
 
     public Task HideModal()
@@ -50,13 +52,10 @@
         return ModalService.Hide();
     }
 
-    private static ModalInstanceOptions Options(ModalSize size, string id) => new()
+    private static ModalInstanceOptions Options(ModalSize size) => new()
         {
             UseModalStructure = false,
             Centered = true,
             Size = size,
-            Stateful = true,
-            ElementId = id,
-            RenderMode = ModalRenderMode.LazyLoad
         };
 }
